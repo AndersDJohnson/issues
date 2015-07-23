@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+  <body>
+    <ul>
+    <% _.each(issues, function (issue) { %>
+      <li>
+        <a href="<%= url + issue.url %>"><%= issue.title %></a>
+      </li>
+    <% }) %>
+    </ul>
+  </body>
+</html>

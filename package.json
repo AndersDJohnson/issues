@@ -1,0 +1,24 @@
+{
+  "name": "issues",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "mon": "nodemon -e js,html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "async": "^1.4.0",
+    "consolidate": "^0.13.1",
+    "express": "^4.13.1",
+    "lodash": "^3.10.0",
+    "request": "^2.60.0",
+    "tree-model": "^1.0.0"
+  },
+  "devDependencies": {
+    "Faker": "^0.7.2",
+    "browserify": "^11.0.0",
+    "json-server": "^0.7.21"
+  }
+}

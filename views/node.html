@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <body>
+    <h1><%= node.title %></h1>
+
+    <dl>
+      <dt>type</dt>
+      <dd><%= node.type %></dd>
+
+      <dt>completion</dt>
+      <dd><%= node.completion %></dd>
+
+      <dt>deep completion</dt>
+      <dd><%= deep.completion %></dd>
+
+      <dt>deep nodes</dt>
+      <dd><%= deep.nodes %></dd>
+    </dl>
+
+    <p>
+      <%= node.body %>
+    </p>
+
+    <h2>Comments</h2>
+    <ul>
+    <% _.each(_.filter(node.links, function (l) { return l.other.type === 'comment'; }), function (link) { %>
+      <li>
+        <a href="<%= url + link.other.url %>"><%= link.other.title %></a>
+      </li>
+    <% }) %>
+    </ul>
+
+    <h2>Issues</h2>
+    <ul>
+    <% _.each(_.filter(node.links, function (l) { return l.other.type === 'issue'; }), function (link) { %>
+      <li>
+        <a href="<%= url + link.other.url %>">(<%= link.type %>) <%= link.other.title %></a>
+      </li>
+    <% }) %>
+    </ul>
+
+    <h2>Links (out)</h2>
+    <ul>
+    <% _.each(_.filter(node.links, function (l) { return l.out; }), function (link) { %>
+      <li>
+        <a href="<%= url + link.other.url %>">(<%= link.type %> : <%= link.other.type %>) <%= link.other.title %></a>
+      </li>
+    <% }) %>
+    </ul>
+
+    <h2>Links (in)</h2>
+    <ul>
+    <% _.each(_.filter(node.links, function (l) { return ! l.out; }), function (link) { %>
+      <li>
+        <a href="<%= url + link.other.url %>">(<%= link.type %> : <%= link.other.type %>) <%= link.other.title %></a>
+      </li>
+    <% }) %>
+    </ul>
+  </body>
+</html>

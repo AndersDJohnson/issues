@@ -21,6 +21,7 @@ var draw = trees.draw = function (tree, indent) {
   var indentStr = _.repeat(' ', indent);
   var str = '';
   _.each(tree, function (node) {
+    if (! node || ! node.node) return;
     str += indentStr + node.node.id + '\n';
     if (node.tree) {
       str += draw(node.tree, indent + 1);
@@ -29,7 +30,7 @@ var draw = trees.draw = function (tree, indent) {
   return str;
 };
 
-var tree = trees.tree = function (links, getNode, cb, options, state) {
+var tree = trees.tree = function (node, getNode, cb, options, state) {
 
   options = options || {};
   options.maxDepth = options.maxDepth || Infinity;
@@ -38,60 +39,34 @@ var tree = trees.tree = function (links, getNode, cb, options, state) {
   state.visited = state.visited || {};
   state.depth = state.depth || 0;
 
-  var depth = state.depth;
-
-  var length = links.length;
-
-  if (! length) {
-    cb(null);
-    return;
-  }
-
-  // if (state.depth > options.maxDepth) {
-  //   console.log('stopping tree walk at depth ' + depth);
-  //   cb(null);
-  //   return;
-  // }
-
-  state.depth += 1;
-
-  var len = links.length;
-
-  async.reduce(
-    links,
-    {},
-    function (memo, link, _cb) {
-
-      if (state.visited[link.other.id]) {
-        console.log('stopping tree recursion at depth ' + depth + ' on link to node ' + link.other.id);
-        _cb(null, memo);
-        return;
-      }
-
-      state.visited[link.other.id] = true;
-
-      getNode(link.other.id, function (err, node) {
-        if (node.links && node.links.length) {
-          tree(node.links, getNode, function (err, tree) {
-            memo[node.id] = {
-              node: node,
-              tree: tree
-            };
-            _cb(null, memo);
-          }, options, state);
+  getNode(node.id, function (err, node) {
+    var links = node.links;
+    if (links && links.length) {
+      async.reduce(
+        links,
+        [],
+        function (children, link, _cb) {
+          tree({
+            id: link.other.id
+          }, getNode, function (err, subtree) {
+            children.push(subtree);
+            _cb(err, children);
+          }, options, _.defaults({
+            depth: state.depth + 1
+          }, state));
+        },
+        function (err, children) {
+          cb(err, {
+            node: node,
+            children: children
+          });
         }
-        else {
-          memo[node.id] = {
-            node: node
-          };
-          _cb(null, memo);
-        }
-      });
-    },
-    function (err, tree) {
-      cb(err, tree);
+      );
     }
-  );
+    else {
+      cb(null, {node: node});
+    }
+  });
 
   // async.reduce(
   //   links,

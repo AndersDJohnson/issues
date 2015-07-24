@@ -1,10 +1,12 @@
 var trees = require('./trees');
+var _ = require('lodash');
 
 var nodes = {
   0: {
     id: 0,
     links: [
       {
+        id: 1,
         other: {
           id: 1
         }
@@ -67,6 +69,7 @@ var nodes = {
   }
 };
 
+
 var getNode = function (id, cb) {
   cb(null, nodes[id]);
 };
@@ -76,4 +79,3 @@ trees.tree(nodes[0].links, getNode, function (err, tree) {
 }, {
   maxDepth: 2
 });
-

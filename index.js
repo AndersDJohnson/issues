@@ -4,7 +4,7 @@ var request = require('request');
 var async = require('async');
 var cons = require('consolidate');
 var _ = require('lodash');
-var tress = require('./trees');
+var trees = require('./trees');
 
 app.engine('html', cons.lodash);
 app.set('view engine', 'html');
@@ -32,7 +32,7 @@ var apiPath = function (path) {
 };
 
 var apiGetNode = function (id, cb) {
-  request(apiPath('/nodes/' + link.other.id), function (err, resp, body) {
+  request(apiPath('/nodes/' + id), function (err, resp, body) {
     var node = JSON.parse(body);
     cb(null, node);
   });
@@ -58,22 +58,24 @@ app.get('/nodes/:id', function (req, res) {
   request(apiPath('/nodes/' + id), function (err, resp, body) {
     var node = JSON.parse(body);
     
-    console.log('links', node.links);
-    reduce(node.links, apiGetNode, function (err, result) {
-      console.log('result', result);
+    // console.log('links', node.links);
+    trees.tree(node, apiGetNode, function (err, tree) {
+      console.log('tree');
+      console.log(tree);
+      console.log(trees.draw(tree));
       res.render('node', {
         url: url,
         apiURL: apiURL,
         node: node,
-        deep: result || {}
+        deep: tree || {}
       });
-    }, 0, 2);
+    }, {
+      maxDepth: 3
+    });
 
   });
 });
 
-
-var reduce = require('./reduce');
 
 var server = app.listen(port, function () {
   var host = server.address().address;

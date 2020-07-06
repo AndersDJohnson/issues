@@ -20,5 +20,6 @@
     "Faker": "^0.7.2",
     "browserify": "^11.0.0",
     "json-server": "^0.7.21"
-  }
+  },
+  "license": "MIT"
 }

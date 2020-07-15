@@ -12,7 +12,7 @@
     "async": "^1.4.0",
     "consolidate": "^0.13.1",
     "express": "^4.13.1",
-    "lodash": "^3.10.0",
+    "lodash": "^4.17.19",
     "request": "^2.60.0",
     "tree-model": "^1.0.0"
   },
